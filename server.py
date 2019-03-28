@@ -29,6 +29,11 @@ async def notify_state():
 		await asyncio.wait([user.send(message) for user in USERS])
 
 
+async def send_message(msg, sender):
+	message = json.dumps({'type': 'message', 'msg': msg, 'sender': sender})
+	await asyncio.wait([user.send(message) for user in USERS])
+
+
 async def register(websocket):
 	USERS.add(websocket)
 	await notify_users()
@@ -41,12 +46,17 @@ async def unregister(websocket):
 
 async def counter(websocket, path):
 	await register(websocket)
+
 	try:
 		await websocket.send(state_event())
 		async for message in websocket:
 			data = json.loads(message)
+			print("Data received: ", data)
 
-			if data['action'] == 'minus':
+			if data['action'] == 'message':
+				await send_message(data['message'], data['sender'])
+
+			elif data['action'] == 'minus':
 				STATE['value'] -= 1
 				await notify_state()
 
@@ -55,7 +65,7 @@ async def counter(websocket, path):
 				await notify_state()
 
 			else:
-				logging.error('unsupported event: {}', data)
+				logging.error('unsupported event: {}'.format(data))
 	finally:
 		await unregister(websocket)
 

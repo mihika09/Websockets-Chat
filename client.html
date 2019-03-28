@@ -3,7 +3,9 @@
     <title>
         WebSockets Synchronization Example
     </title>
+    <script src = "script.js" async></script>
     <style type="text/css">
+
             body {
                 font-family: "Courier New", sans-serif;
                 text-align: center;
@@ -37,47 +39,28 @@
             .state {
                 font-size: 2em;
             }
+
+            .message {
+                font-family: "Comic Sans MS";
+                font-size: 20px;
+            }
         </style>
 </head>
 <body>
-    <div class = "buttons">
+    <p>Username: <span class="username">?</span></p>
+    <div>
+        <textarea rows = 2 cols = 80 placeholder="Say something!" class="message"></textarea>
+        <button class="send">Send</button>
+    </div>
+    <!--<div class = "buttons">
         <div class = "minus button">-</div>
         <div class = "value">?</div>
         <div class = "plus button">+</div>
-    </div>
+    </div>-->
     <div class = "state">
         <span class = "users"> ? </span> online
     </div>
-    <script>
-        var minus = document.querySelector('.minus'),
-            plus = document.querySelector('.plus'),
-            value = document.querySelector('.value')
-            users = document.querySelector('.users'),
-            websocket = new WebSocket("ws://localhost:8080/");
-
-        minus.onclick = function (event) {
-            websocket.send(JSON.stringify({'action': 'minus'}));
-        }
-
-        plus.onclick = function (event) {
-            websocket.send(JSON.stringify({'action': 'plus'}));
-        }
-
-        websocket.onmessage = function (event) {
-            data = JSON.parse(event.data);
-            switch (data['type']) {
-                case 'users':
-                    users.textContent = (data['count'].toString() + " user" + (data['count'] == 1 ? "": "s"));
-                    break;
-
-                case 'state':
-                    value.textContent = (data['value']);
-                    break;
-
-                default:
-                    console.error("unsupported event ", data);
-            }
-        };
-    </script>
+    <div class = 'messages'>
+    </div>
 </body>
 </html>
