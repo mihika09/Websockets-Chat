@@ -2,84 +2,68 @@ import asyncio
 import websockets
 import json
 import logging
+import uuid
+
 
 logging.basicConfig()
 
-STATE = {'value': 0}
-USERS = set()
+USERS = {}
 
 
-def user_event():
-	return json.dumps({'type': 'users', 'count': len(USERS)})
+async def send_message(rcvd_msg, websocket):
+	msg = json.dumps({'type': 'message', 'sender': USERS[websocket]['name'], 'msg': rcvd_msg})
+	await asyncio.wait([user.send(msg) for user in USERS])
 
 
-def state_event():
-	return json.dumps({'type': 'state', **STATE})
+async def notify_user(msg):
+	user_notification = json.dumps({'type': 'user', 'count': len(USERS), 'notification': msg})
+	await asyncio.wait([user.send(user_notification) for user in USERS])
 
 
-async def notify_users():
-	if USERS:
-		message = user_event()
-		await asyncio.wait([user.send(message) for user in USERS])
-
-
-async def notify_state():
-	if STATE:
-		message = state_event()
-		await asyncio.wait([user.send(message) for user in USERS])
-
-
-async def send_message(msg, sender):
-	message = json.dumps({'type': 'message', 'msg': msg, 'sender': sender})
-	await asyncio.wait([user.send(message) for user in USERS])
-
-
-async def register(websocket):
-	USERS.add(websocket)
-	await notify_users()
+async def register(name, websocket):
+	id = uuid.uuid1()
+	USERS[websocket] = {'id': id, 'name': name}
+	msg = '{} has joined the chat'.format(USERS[websocket]['name'])
+	await notify_user(msg)
 
 
 async def unregister(websocket):
-	USERS.remove(websocket)
-	await notify_users()
+	msg = '{} has left the chat'.format(USERS[websocket]['name'])
+	USERS.pop(websocket, None)
+	await notify_user(msg)
 
 
-async def counter(websocket, path):
-	await register(websocket)
+async def chat(websocket, path):
+	name = await websocket.recv()
+	n = json.loads(name)
+	print("Received username: ", n)
+	await register(n['username'], websocket)
 
 	try:
-		await websocket.send(state_event())
 		async for message in websocket:
 			data = json.loads(message)
-			print("Data received: ", data)
-
-			if data['action'] == 'message':
-				await send_message(data['message'], data['sender'])
-
-			elif data['action'] == 'minus':
-				STATE['value'] -= 1
-				await notify_state()
-
-			elif data['action'] == 'plus':
-				STATE['value'] += 1
-				await notify_state()
+			print("Received data: ", data)
+			if data['type'] == 'message':
+				await send_message(data['message'], websocket)
 
 			else:
 				logging.error('unsupported event: {}'.format(data))
+
 	finally:
 		await unregister(websocket)
 
 
-start_server = websockets.serve(counter, 'localhost', 8080)
+if __name__ == '__main__':
 
+	start_server = websockets.serve(chat, 'localhost', 8080)
 
-loop = asyncio.get_event_loop()
-server = loop.run_until_complete(start_server)
-try:
-	loop.run_forever()
-except KeyboardInterrupt:
-	print("Shutting Down Server...")
-finally:
-	server.close()
-	loop.run_until_complete(server.wait_closed())
-	loop.close()
+	loop = asyncio.get_event_loop()
+	server = loop.run_until_complete(start_server)
+	try:
+		loop.run_forever()
+	except KeyboardInterrupt:
+		print("Shutting Down Server...")
+	finally:
+		server.close()
+		loop.run_until_complete(server.wait_closed())
+		loop.close()

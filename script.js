@@ -1,62 +1,50 @@
-let name = prompt('Enter your name')
-while (name === ''){
-    name = prompt('Name cannot be blank!')
-}
+const input = document.querySelector('#message_input'),
+      users = document.querySelector('.users_count'),
+      messages = document.querySelector('.messages');
 
-const minus = document.querySelector('.minus'),
-      plus = document.querySelector('.plus'),
-      value = document.querySelector('.value'),
-      users = document.querySelector('.users'),
-      username = document.querySelector('.username'),
-      message = document.querySelector('.message'),
-      messages = document.querySelector('.messages'),
-      send = document.querySelector('.send');
+users.hidden = true;
 
-var websocket = new WebSocket("ws://localhost:8080/");
+var websocket = new WebSocket('ws://localhost:8080/')
 
-username.textContent = name
-
-websocket.onopen = function (event) {
-    websocket.send(JSON.stringify({'action': 'name', 'name': name}))
-}
-
-/*minus.onclick = function (event) {
-    websocket.send(JSON.stringify({'action': 'minus'}));
-}
-
-plus.onclick = function (event) {
-    websocket.send(JSON.stringify({'action': 'plus'}));
-}*/
-
-send.onclick = function (event) {
-    msg = message.value
-    websocket.send(JSON.stringify({'action': 'message', 'message': msg, 'sender': name}));
-    message.value = ''
+input.onkeyup = function(event){
+    if (event.keyCode === 13){
+        if (input.placeholder === 'Enter name'){
+            websocket.send(JSON.stringify({'type': 'username', 'username': input.value}))
+            input.value = ""
+            input.placeholder = 'Enter message'
+        }
+        else {
+            websocket.send(JSON.stringify({'type': 'message', 'message': input.value}))
+            input.value=""
+        }
+    }
 }
 
 websocket.onmessage = function (event) {
-    console.log("*******************************")
-    data = JSON.parse(event.data);
-    console.log("Data: ", data)
-
-    switch (data['type']) {
-        case 'users':
-            users.textContent = (data['count'].toString() + " user" + (data['count'] == 1 ? "": "s"));
+    data = JSON.parse(event.data)
+    console.log(data)
+    switch (data['type']){
+        case 'user':
+            users.textContent = (data['count'].toString() + " user" + (data['count'] == 1 ? "": "s") + " online");
+            users.hidden = false;
+            user_notification = document.createElement('p')
+            content = document.createTextNode(data['notification'])
+            user_notification.appendChild(content)
+            user_notification.style.color = 'green'
+            messages.appendChild(user_notification)
             break;
 
-        /*case 'state':
-            value.textContent = (data['value']);
-            break;*/
-
         case 'message':
-            list_of_messages = document.createElement('p')
-            content = document.createTextNode(data['sender'] + '>> ' + data['msg'])
-            list_of_messages.appendChild(content)
-            messages.appendChild(list_of_messages)
+            message = document.createElement('p')
+            content = document.createTextNode(data['sender']+ ': ' + data['msg'])
+            message.appendChild(content)
+            message.style.color = 'blue'
+            messages.appendChild(message)
             break;
 
         default:
             // console.log('Data:', data['type'])
             console.error("unsupported event ", data);
     }
-}
+};
+

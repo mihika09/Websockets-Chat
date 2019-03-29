@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <title>
         WebSockets Synchronization Example
@@ -7,20 +8,13 @@
     <script src = "script.js" async></script>
 </head>
 <body>
-    <p>Username: <span class="username">?</span></p>
     <div>
-        <textarea rows = 2 cols = 80 placeholder="Say something!" class="message"></textarea>
-        <button class="send">Send</button>
+        <span class="users_count">1</span>
     </div>
-    <!--<div class = "buttons">
-        <div class = "minus button">-</div>
-        <div class = "value">?</div>
-        <div class = "plus button">+</div>
-    </div>-->
-    <div class = "state">
-        <span class = "users"> ? </span> online
+    <br>
+    <div>
+        <input type="text" id="message_input" placeholder="Enter name"/>
     </div>
-    <div class = 'messages'>
-    </div>
+    <div class="messages"></div>
 </body>
 </html>
