@@ -8,43 +8,53 @@ import uuid
 logging.basicConfig()
 
 USERS = {}
+ROOMS = {}
 
 
-async def send_message(rcvd_msg, websocket):
-	msg = json.dumps({'type': 'message', 'sender': USERS[websocket]['name'], 'msg': rcvd_msg})
-	await asyncio.wait([user.send(msg) for user in USERS])
+async def send_message(data, websocket):
+	print("Data: ", data)
+	msg = json.dumps({'type': 'message', 'sender': USERS[websocket]['name'], 'msg': data['message']})
+	if ROOMS[data['room_id']]:
+		await asyncio.wait([user.send(msg) for user in ROOMS[data['room_id']]])
 
 
-async def notify_user(msg):
-	user_notification = json.dumps({'type': 'user', 'count': len(USERS), 'notification': msg})
-	await asyncio.wait([user.send(user_notification) for user in USERS])
+async def notify_user(msg, room_id):
+	user_notification = json.dumps({'type': 'user', 'count': len(ROOMS[room_id]), 'notification': msg, 'room_id': room_id})
+	if ROOMS[room_id]:
+		await asyncio.wait([user.send(user_notification) for user in ROOMS[room_id]])
 
 
-async def register(name, websocket):
+async def register(data, websocket):
 	id = uuid.uuid1()
-	USERS[websocket] = {'id': id, 'name': name}
+	USERS[websocket] = {'id': id, 'name': data['username'], 'room_id': data['room_id']}
+	if data['room_id'] not in ROOMS:
+		ROOMS[data['room_id']] = []
+	ROOMS[data['room_id']].append(websocket)
 	msg = '{} has joined the chat'.format(USERS[websocket]['name'])
-	await notify_user(msg)
+
+	await notify_user(msg, data['room_id'])
 
 
 async def unregister(websocket):
+	room_id = USERS[websocket]['room_id']
 	msg = '{} has left the chat'.format(USERS[websocket]['name'])
 	USERS.pop(websocket, None)
-	await notify_user(msg)
+	ROOMS[room_id].remove(websocket)
+	await notify_user(msg, room_id)
 
 
 async def chat(websocket, path):
-	name = await websocket.recv()
-	n = json.loads(name)
-	print("Received username: ", n)
-	await register(n['username'], websocket)
+	notif = await websocket.recv()
+	data = json.loads(notif)
+	print("Received username: ", data)
+	await register(data, websocket)
 
 	try:
 		async for message in websocket:
 			data = json.loads(message)
 			print("Received data: ", data)
 			if data['type'] == 'message':
-				await send_message(data['message'], websocket)
+				await send_message(data, websocket)
 
 			else:
 				logging.error('unsupported event: {}'.format(data))
@@ -55,7 +65,7 @@ async def chat(websocket, path):
 
 if __name__ == '__main__':
 
-	start_server = websockets.serve(chat, 'localhost', 8080)
+	start_server = websockets.serve(chat, '192.168.0.117', 8080)
 
 	loop = asyncio.get_event_loop()
 	server = loop.run_until_complete(start_server)
