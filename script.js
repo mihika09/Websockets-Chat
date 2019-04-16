@@ -10,7 +10,7 @@ users.hidden = true;
 room_id.hidden = true;
 input_message.hidden = true;
 
-var websocket = new WebSocket('ws://192.168.0.117:8080/')
+var websocket = new WebSocket('ws://192.168.43.91:8080/')
 
 room.onkeyup = function(event){
     if(event.keyCode === 13){

@@ -65,7 +65,7 @@ async def chat(websocket, path):
 
 if __name__ == '__main__':
 
-	start_server = websockets.serve(chat, '192.168.0.117', 8080)
+	start_server = websockets.serve(chat, '192.168.43.91', 8080)
 
 	loop = asyncio.get_event_loop()
 	server = loop.run_until_complete(start_server)
