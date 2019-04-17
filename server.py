@@ -25,12 +25,16 @@ async def notify_user(msg, room_id):
 
 
 async def register(data, websocket):
+	print("#################")
 	id = uuid.uuid1()
 	USERS[websocket] = {'id': id, 'name': data['username'], 'room_id': data['room_id']}
 	if data['room_id'] not in ROOMS:
 		ROOMS[data['room_id']] = []
 	ROOMS[data['room_id']].append(websocket)
 	msg = '{} has joined the chat'.format(USERS[websocket]['name'])
+
+	print("ROOMS: ", ROOMS)
+	print("msg: ", msg)
 
 	await notify_user(msg, data['room_id'])
 
@@ -45,6 +49,7 @@ async def unregister(websocket):
 
 async def chat(websocket, path):
 	notif = await websocket.recv()
+	print("Notification: ", notif)
 	data = json.loads(notif)
 	print("Received username: ", data)
 	await register(data, websocket)
@@ -65,7 +70,7 @@ async def chat(websocket, path):
 
 if __name__ == '__main__':
 
-	start_server = websockets.serve(chat, '192.168.43.91', 8080)
+	start_server = websockets.serve(chat, 'localhost', 8080)
 
 	loop = asyncio.get_event_loop()
 	server = loop.run_until_complete(start_server)

@@ -1,10 +1,20 @@
+const username = document.getElementById('username')
+const room = document.getElementById('room')
 const msgBox = document.getElementById('typeMsg')
 const screen = document.getElementById('chatDisplay')
-const roomId = window.localStorage.getItem('roomId')
-msgBox.value = ''
-msgBox.focus()
+username.focus()
 
 let websocket = new WebSocket('ws://localhost:8080/')
+
+room.addEventListener('keydown', (e) => {
+  if (e.code === 'Enter') {
+    websocket.send(JSON.stringify({ 'type': 'user_join', 'username': username.value, 'room_id': room.value }))
+    username.hidden = true
+    room.hidden = true
+    msgBox.value = ''
+    msgBox.focus()
+  }
+})
 
 function notify (message) {
   let notification = document.createElement('p')
@@ -15,7 +25,7 @@ function notify (message) {
 
 msgBox.addEventListener('keydown', (e) => {
   if (e.code === 'Enter' && msgBox.value !== '') {
-    websocket.send(JSON.stringify({ 'type': 'message', 'message': msgBox.value, 'room_id': roomId }))
+    websocket.send(JSON.stringify({ 'type': 'message', 'message': msgBox.value, 'room_id': room.value }))
     addMessage(msgBox.value, 'message')
   }
 })
@@ -40,8 +50,10 @@ websocket.onmessage = function (e) {
       break
 
     case 'message':
-      let reply = data['msg']
-      addMessage(reply, 'reply')
+      if (data['sender'] !== username.value) {
+        let reply = data['msg']
+        addMessage(reply, 'reply')
+      }
       break
 
     default:
