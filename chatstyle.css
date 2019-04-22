@@ -12,6 +12,13 @@ header {
   margin-bottom: 2px;
 }
 
+#enterChat {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.438);
+  text-align: center;
+}
+
 #nameList, #chatBox {
   float: left;
 }
@@ -45,17 +52,20 @@ header {
   width: 85%;
 }
 
-.message {
-  width: 50%;
-  background-color: white;
+.message, .reply {
+  width: 45%;
+  height: auto;
   border-radius: 3px;
+  word-wrap: break-word;
+}
+
+.message {
+  background-color: white;
   margin-left: auto;
 }
 
 .reply {
-  width: 50%;
   background-color: white;
-  border-radius: 3px;
   margin-right: auto;
 }
 
@@ -65,4 +75,8 @@ header {
   max-width: 50%;
   margin-left: auto;
   margin-right: auto;   
+}
+
+#chatList {
+  list-style-type: none;
 }
