@@ -24,12 +24,12 @@ header {
 }
 
 #nameList {
-  height:500px;
+  height:550px;
   width: 25%;
 }
 
 #chatBox {
-  height: 500px;
+  height: 550px;
   width: 75%;
 }
 
@@ -42,7 +42,7 @@ header {
 }
 
 #chatInp {
-  background-color: rgba(116, 169, 240, 0.952);
+  background-color:rgba(210, 211, 226, 0.712);
   height: 15%;
 }
 
@@ -53,20 +53,53 @@ header {
 }
 
 .message, .reply {
-  width: 45%;
-  height: auto;
-  border-radius: 3px;
+  width: 30%;
+  height: 50px;
+  border-radius: .4em;
   word-wrap: break-word;
+  position: relative;
+}
+
+.message::after { 
+  content: ''; 
+  position: absolute; 
+  right: 0; 
+  top: 50%; 
+  width: 0; 
+  height: 0; 
+  border: 1.188em solid transparent; 
+  border-left-color: rgba(255, 255, 255, 0.719);; 
+  border-right: 0; 
+  border-bottom: 0; 
+  margin-top: -0.594em; 
+  margin-right: -1.187em; 
 }
 
 .message {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.719);
   margin-left: auto;
+  margin-right: 2%;
 }
 
 .reply {
   background-color: white;
   margin-right: auto;
+  margin-left: 2%;
+}
+
+.reply::after {
+  content: ''; 
+  position: absolute; 
+  left: 0; 
+  top: 50%; 
+  width: 0; 
+  height: 0; 
+  border: 1.188em solid transparent; 
+  border-right-color: white; 
+  border-left: 0; 
+  border-bottom: 0; 
+  margin-top: -0.594em; 
+  margin-left: -1.187em;
 }
 
 .notification {
