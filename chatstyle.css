@@ -1,63 +1,106 @@
+@import url('https://fonts.googleapis.com/css?family=Fresca|Pangolin');
+
+html {
+  background-image: url('doodle.jpg');
+  background-size: contain;
+}
+
 body {
   margin: 3px;
 }
 
-header, aside {
-  background-color: rgba(127, 255, 212, 0.651);
-}
-
 header {
   width: 100%;
-  height: 100px;
+  height: 90px;
   margin-bottom: 2px;
+  background-color: rgba(36, 30, 30, 0.945);
 }
 
 #enterChat {
-  height: 100%;
+  padding-top: 150px;
+  position: fixed;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.438);
+  height: 100%;
+  background-color: rgba(248, 246, 246, 0.911);
   text-align: center;
 }
 
 #nameList, #chatBox {
   float: left;
+  transition: width 0.3s;
 }
 
 #nameList {
   height:550px;
-  width: 25%;
+  width: 3%;
+  background: rgba(22, 5, 5, 0.918);
+  border-radius: 2px;
+  color: transparent;
+}
+
+#nameList:hover {
+  width: 20%;
+}
+
+#nameList:hover  [class=userDisplay] {
+  color: white;
+}
+
+#nameList:hover + [id=chatBox] {
+  width: 80%;
+}
+
+.notification {
+  font-family: 'Pangolin', cursive;
+  font-size: x-large;
+  color: rgba(255, 255, 255, 0.918);
+  font-weight: bold;
+
 }
 
 #chatBox {
   height: 550px;
-  width: 75%;
+  width: 97%;
 }
 
 #chatDisplay{
-  background-color: rgba(87, 204, 64, 0.719);
+  background-color: rgba(46, 43, 43, 0.664);
   height: 85%;
   overflow-y: auto;
-  padding-right: 5px;
-  padding-left: 5px;
 }
 
 #chatInp {
-  background-color:rgba(210, 211, 226, 0.712);
+  background-color:rgba(7, 7, 7, 0.767);
   height: 15%;
 }
 
 #typeMsg {
-  margin-top: 20px;
+  margin-top: 1.5%;
   margin-left: 20px;
   width: 85%;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.829);
+  font-family: 'Pangolin', cursive;
+  color: white;
+  font-size: large;
+}
+
+#chatInp > button {
+  margin-left: 30px;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.671);
 }
 
 .message, .reply {
-  width: 30%;
-  height: 50px;
-  border-radius: .4em;
+  width: 40%;
+  max-width: 50.2%;
+  height: auto;
+  border-radius: .3em;
   word-wrap: break-word;
   position: relative;
+  padding: 8px;
+  margin: 10px;
+  font-family: 'Pangolin', cursive;
 }
 
 .message::after { 
@@ -67,24 +110,27 @@ header {
   top: 50%; 
   width: 0; 
   height: 0; 
-  border: 1.188em solid transparent; 
+  border: 1.063em solid transparent; 
   border-left-color: rgba(255, 255, 255, 0.719);; 
   border-right: 0; 
   border-bottom: 0; 
-  margin-top: -0.594em; 
-  margin-right: -1.187em; 
+  margin-top: -0.531em; 
+  margin-right: -1.062em;
+  box-shadow: 0px 1px rgba(46, 46, 46, 0.678);
 }
 
 .message {
   background-color: rgba(255, 255, 255, 0.719);
   margin-left: auto;
   margin-right: 2%;
+  box-shadow: -0.5px 1px 1px rgba(46, 46, 46, 0.678);
 }
 
 .reply {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.904);
   margin-right: auto;
   margin-left: 2%;
+  box-shadow: 1px 1px 1px rgba(46, 46, 46, 0.678);
 }
 
 .reply::after {
@@ -95,11 +141,41 @@ header {
   width: 0; 
   height: 0; 
   border: 1.188em solid transparent; 
-  border-right-color: white; 
+  border-right-color: rgba(255, 255, 255, 0.904); 
   border-left: 0; 
   border-bottom: 0; 
   margin-top: -0.594em; 
   margin-left: -1.187em;
+  box-shadow: 0px 1px rgba(46, 46, 46, 0.678);
+}
+
+.msgContent {
+  padding: 0;
+  width: 80%;
+  font-size: larger;
+}
+
+.sender {
+  padding: 0;
+  margin-top: 1px;
+  margin-bottom: 5px;
+  font-weight: bolder;
+  text-shadow:
+  -1px -1px 0 rgba(0, 0, 0, 0.849),  
+   1px -1px 0 rgba(0, 0, 0, 0.849),
+   -1px 1px 0 rgba(0, 0, 0, 0.849),
+    1px 1px 0 rgba(0, 0, 0, 0.849);
+  letter-spacing: 2px;
+}
+
+.msgTime {
+  padding: 5px;
+  color: gray;
+  font-size: smaller;
+  min-width: 20%;
+  max-width: auto;
+  float: right;
+  text-align: right;
 }
 
 .notification {

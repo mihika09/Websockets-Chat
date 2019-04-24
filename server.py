@@ -18,8 +18,8 @@ async def send_message(data, websocket):
 		await asyncio.wait([user.send(msg) for user in ROOMS[data['room_id']]])
 
 
-async def notify_user(msg, room_id):
-	user_notification = json.dumps({'type': 'user', 'count': len(ROOMS[room_id]), 'notification': msg, 'room_id': room_id})
+async def notify_user(username, room_id):
+	user_notification = json.dumps({'type': 'user', 'count': len(ROOMS[room_id]), 'name': username, 'room_id': room_id})
 	if ROOMS[room_id]:
 		await asyncio.wait([user.send(user_notification) for user in ROOMS[room_id]])
 
@@ -31,12 +31,10 @@ async def register(data, websocket):
 	if data['room_id'] not in ROOMS:
 		ROOMS[data['room_id']] = []
 	ROOMS[data['room_id']].append(websocket)
-	msg = '{} has joined the chat'.format(USERS[websocket]['name'])
 
 	print("ROOMS: ", ROOMS)
-	print("msg: ", msg)
 
-	await notify_user(msg, data['room_id'])
+	await notify_user(data['username'], data['room_id'])
 
 
 async def unregister(websocket):

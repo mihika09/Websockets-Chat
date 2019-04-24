@@ -7,21 +7,21 @@
     <script src = "chatscript.js" async></script>
   </head>
   <body>
+      <div id = "enterChat">
+          Login to start chat!
+          <input type = "text" id = "username" placeholder = "Username"/>
+          <input type = "text" id = "room" placeholder = "Room ID"/>
+        </div>
     <header></header>
     <div id = "mainChat">
-      <aside id = "nameList">Active chats
+      <aside id = "nameList">
         <ul id = "chatList"></ul>
       </aside>
       <main id = "chatBox">
-        <div id = "chatDisplay">
-          <div id = "enterChat">
-            Login to start chat!
-            <input type = "text" id = "username" placeholder = "Username"/>
-            <input type = "text" id = "room" placeholder = "Room ID"/>
-          </div>
-        </div>
+        <div id = "chatDisplay"></div>
         <div id = "chatInp">
           <input id = "typeMsg" type="text">
+          <button id = "sendMsg">Send</button>
         </div>
       </main>
     </div>
