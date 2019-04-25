@@ -9,4 +9,4 @@ Clone the repository and run the following commands on 2 different terminal wind
 
 > python server.py
 
-Navigate to localhost:5000/index on different windows and enter using a random username and room ID
+Navigate to localhost:5000/index on different browser windows and enter using a random username and room ID to enter a chatroom.
