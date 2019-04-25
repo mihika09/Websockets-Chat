@@ -56,9 +56,9 @@ sendBtn.addEventListener('click', () => {
 msgBox.addEventListener('keydown', (e) => {
   if (e.code === 'Enter' && msgBox.value.trim() !== '') {
     websocket.send(JSON.stringify({ 'type': 'message', 'message': msgBox.value, 'room_id': roomId }))
-    addMessage(msgBox.value, 'message')
-    addMessage('test', 'reply', name)
-    addToList('test')
+    // addMessage(msgBox.value, 'message')
+    // addMessage('test', 'reply', name)
+    // addToList('test')
   }
 })
 

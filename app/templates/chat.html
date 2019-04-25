@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Chat App</title>
-    <link rel ="stylesheet" href="chatstyle.css">
-    <script src = "chatscript.js" async></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatstyle.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='chatscript.js') }}" async></script>
   </head>
   <body>
       <div id = "enterChat">

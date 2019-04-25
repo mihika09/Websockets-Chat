@@ -71,6 +71,7 @@ if __name__ == '__main__':
 	start_server = websockets.serve(chat, 'localhost', 8080)
 
 	loop = asyncio.get_event_loop()
+	print("loop: ", loop)
 	server = loop.run_until_complete(start_server)
 	try:
 		loop.run_forever()
