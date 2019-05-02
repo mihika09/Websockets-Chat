@@ -3,7 +3,18 @@ A chat app using the websockets 7.0 library in Python. The rooms feature has bee
 
 ## How to use:
 
-Clone the repository and run the following commands on 2 different terminal windows:
+Clone the repository and create and activate a python virtual environment inside the repository as follows:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Once the virtual environment has been activated, install the requirements.txt file as follows:
+```
+pip install -r requirements.txt
+```
+
+Now run the following commands on 2 different terminal windows (after activating the virtual environments on both the terminal windows):
 
 ```
 python websockets_chat.py
