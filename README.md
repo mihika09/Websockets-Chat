@@ -1,6 +1,9 @@
 # Websockets-Chat
 A chat app using the websockets 7.0 library in Python. The rooms feature has been implmented, so only users present in the room can view the messages being sent in that room. 
 
+## Requirements
+Websockets-Chat requires Python ≥ 3.4.
+
 ## How to use:
 
 Clone the repository and create and activate a python virtual environment inside the repository as follows:
