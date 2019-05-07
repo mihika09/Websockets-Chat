@@ -8,4 +8,4 @@ app.config['SECRET_KEY'] = 'gjr39dkjn344_!67#'
 
 @app.route('/index')
 def index():
-	return render_template('chat.html')
+    return render_template('chat.html')

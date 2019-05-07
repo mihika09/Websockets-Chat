@@ -12,7 +12,7 @@ username.focus()
 msgBox.value = ''
 msgBox.disabled = true
 
-let websocket = new WebSocket('ws://localhost:8080/')
+let websocket = new WebSocket('ws://192.168.0.102:8080/')
 
 room.addEventListener('keydown', (e) => {
   if (e.code === 'Enter') {
@@ -56,11 +56,16 @@ sendBtn.addEventListener('click', () => {
 msgBox.addEventListener('keydown', (e) => {
   if (e.code === 'Enter' && msgBox.value.trim() !== '') {
     websocket.send(JSON.stringify({ 'type': 'message', 'message': msgBox.value, 'room_id': roomId }))
+    msgBox.value = ''
     // addMessage(msgBox.value, 'message')
     // addMessage('test', 'reply', name)
     // addToList('test')
   }
 })
+
+function updateScroll () {
+ screen.scrollTop = screen.scrollHeight
+}
 
 function addMessage (message, msgClass, sender = name) {
   let msg = document.createElement('div')
@@ -81,7 +86,7 @@ function addMessage (message, msgClass, sender = name) {
   msg.appendChild(content)
   msg.appendChild(time)
   screen.appendChild(msg)
-  msgBox.value = ''
+  setInterval(updateScroll(), 3000)
   msgBox.focus()
 }
 
@@ -97,7 +102,11 @@ websocket.onmessage = function (e) {
   const data = JSON.parse(e.data)
   switch (data['type']) {
     case 'user':
-      let message = data['name'] !== name ? data['name'] + ' has joined the chat!' : 'You have joined the chat!'
+    let message
+      if (data.status === 'joined')
+        message = data['name'] !== name ? data['name'] + ' has joined the chat!' : 'You have joined the chat!'
+      else message = data['name'] + ' has left the chat'
+      console.log(message)
       notify(message)
       addToList(data['name'])
       break
